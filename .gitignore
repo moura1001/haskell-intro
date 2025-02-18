@@ -1,0 +1,56 @@
+# Compilação do GHC
+*.hi
+*.o
+*.dyn_hi
+*.dyn_o
+*.prof
+*.aux
+*.hp
+*.chi
+*.chs.h
+*.haddock
+*.eventlog
+*.tix
+
+# Executáveis gerados
+dist
+dist-newstyle
+bin/
+*.exe
+*.exe.manifest
+*.exe.stackdump
+*.so
+*.dll
+*.dylib
+
+# Stack
+.stack-work/
+.stack-root/
+.stack/
+
+# Cabal
+cabal.sandbox.config
+cabal.project.local
+cabal.project.local~ 
+cabal-plan.json
+pkg-db/
+cabal-dev/
+*.cabal.macros
+
+# LSP / IDEs
+*.hie
+*.hie-bios
+.ghc.environment.*
+.ghc.*
+hie.yaml
+.idea/
+.vscode/
+*.swp
+*~
+
+# Dependências e caches
+.hsenv
+dist-ghc/
+ghc-tags
+tags
+TAGS
