@@ -58,6 +58,67 @@ vencedor Pedra Papel = "Papel vence Pedra"
 removerVogais :: String -> String
 removerVogais str = [x | x <- str, not (elem x "aeiouAEIOU")]
 
+-- 3.5)
+data UnidadeImperial = Inch | Yard | Foot deriving (Show, Eq)
+
+converterMetros :: Double -> UnidadeImperial -> Double
+converterMetros valor Inch = valor * 0.0254
+converterMetros valor Yard = valor * 0.9144
+converterMetros valor Foot = valor * 0.3048
+
+converterImperial :: Double -> UnidadeImperial -> Double
+converterImperial metros Inch = metros / 0.0254
+converterImperial metros Yard = metros / 0.9144
+converterImperial metros Foot = metros / 0.3048
+
+-- 3.6)
+data Mes = Janeiro | Fevereiro | Marco | Abril | Maio | Junho 
+         | Julho | Agosto | Setembro | Outubro | Novembro | Dezembro
+         deriving (Show, Eq, Enum, Bounded)
+
+checaFim :: Mes -> Int
+checaFim Fevereiro = 28
+checaFim Abril = 30
+checaFim Junho = 30
+checaFim Setembro = 30
+checaFim Novembro = 30
+checaFim _ = 31
+
+prox :: Mes -> Mes
+prox Dezembro = Janeiro
+prox mes = succ mes
+
+data Hemisferio = Norte | Sul deriving (Show, Eq)
+
+estacao :: Mes -> Hemisferio -> String
+estacao mes Norte
+    | mes `elem` [Dezembro, Janeiro, Fevereiro] = "Inverno"
+    | mes `elem` [Marco, Abril, Maio] = "Primavera"
+    | mes `elem` [Junho, Julho, Agosto] = "Verão"
+    | otherwise = "Outono"
+
+estacao mes Sul
+    | mes `elem` [Dezembro, Janeiro, Fevereiro] = "Verão"
+    | mes `elem` [Marco, Abril, Maio] = "Outono"
+    | mes `elem` [Junho, Julho, Agosto] = "Inverno"
+    | otherwise = "Primavera"
+
+-- 3.7)
+ehPalindromo :: String -> Bool
+ehPalindromo str = str == reverse str
+
+-- 3.8)
+filtrarLista :: [Int] -> [Int]
+filtrarLista xs = reverse [x | x <- xs, odd x, x >= 0, x `mod` 7 /= 0]
+
+-- 3.9)
+reverterStrings :: String -> String -> String -> (String, String, String)
+reverterStrings x y z = (reverse x, reverse y, reverse z)
+
+-- 3.10)
+revNum :: Int -> String -> String
+revNum n s = reverse (take n s) ++ drop n s
+
 main :: IO ()
 main = do
     putStrLn "Exercícios capítulo 3:\n"
@@ -111,4 +172,63 @@ main = do
     -- 3.4)
     putStrLn "\n3.4) "
     putStrLn (removerVogais "Olá, Haskell!")
+
+    -- 3.5)
+    putStrLn "\n3.5) "
+    putStrLn "Conversão de 10 inches para metros:"
+    print (converterMetros 10 Inch)
+
+    putStrLn "Conversão de 5 yards para metros:"
+    print (converterMetros 5 Yard)
+
+    putStrLn "Conversão de 3 metros para feet:"
+    print (converterImperial 3 Foot)
+
+    -- 3.6)
+    putStrLn "\n3.6) "
+    let mesAtual = Maio
+    putStrLn $ "Dias de " ++ show mesAtual ++ ": " ++ show (checaFim mesAtual)
+    putStrLn $ "Próximo mês depois de " ++ show mesAtual ++ ": " ++ show (prox mesAtual)
+    putStrLn $ "Estação de " ++ show mesAtual ++ " no Hemisfério Sul: " ++ estacao mesAtual Sul
+    putStrLn $ "Estação de " ++ show mesAtual ++ " no Hemisfério Norte: " ++ estacao mesAtual Norte
+
+    -- 3.7)
+    putStrLn "\n3.7) "
+    putStrLn $ "ehPalindromo \"arara\": " ++ show (ehPalindromo "arara")
+    putStrLn $ "ehPalindromo \"haskell\": " ++ show (ehPalindromo "haskell")
+    putStrLn $ "ehPalindromo \"ana\": " ++ show (ehPalindromo "ana")
+
+    -- 3.8)
+    putStrLn "\n3.8) "
+    let lista1 = [1, 2, 3, 7, 14, 21, 28, -5, -7, 35, 49, 50, 77]
+    let lista2 = [-10, -3, 0, 5, 6, 14, 21, 22, 25, 42, 49, 51]
+
+    putStrLn "Lista original e filtrada (invertida):"
+    putStrLn $ "Entrada: " ++ show lista1
+    putStrLn $ "Saída:   " ++ show (filtrarLista lista1)
+
+    putStrLn "\nOutro exemplo:"
+    putStrLn $ "Entrada: " ++ show lista2
+    putStrLn $ "Saída:   " ++ show (filtrarLista lista2)
+
+    -- 3.9)
+    putStrLn "\n3.9) "
+    let (a, b, c) = reverterStrings "Haskell" "Functional" "Programming"
+
+    putStrLn "Entrada: (\"Haskell\", \"Functional\", \"Programming\")"
+    putStrLn $ "Saída:   (" ++ show a ++ ", " ++ show b ++ ", " ++ show c ++ ")"
+
+    let (d, e, f) = reverterStrings "abc" "12345" "XYZ"
+
+    putStrLn "\nOutro exemplo:"
+    putStrLn $ "Entrada: (\"abc\", \"12345\", \"XYZ\")"
+    putStrLn $ "Saída:   (" ++ show d ++ ", " ++ show e ++ ", " ++ show f ++ ")"
+
+    -- 3.10)
+    putStrLn "\n3.10) "
+    putStrLn $ "revNum 4 \"FATEC\"  = " ++ show (revNum 4 "FATEC")
+    putStrLn $ "revNum 3 \"Programacao\" = " ++ show (revNum 3 "Programacao")
+    putStrLn $ "revNum 5 \"Haskell\" = " ++ show (revNum 5 "Haskell")
+    putStrLn $ "revNum 2 \"ABCD\" = " ++ show (revNum 2 "ABCD")
+    putStrLn $ "revNum 7 \"OpenAI\" = " ++ show (revNum 7 "OpenAI")
 
