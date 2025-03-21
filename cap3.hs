@@ -119,6 +119,58 @@ reverterStrings x y z = (reverse x, reverse y, reverse z)
 revNum :: Int -> String -> String
 revNum n s = reverse (take n s) ++ drop n s
 
+-- 3.11)
+data Binario = Zero | Um deriving (Show, Eq)
+
+data Funcao = Soma2 | Maior | Menor | Mult2 deriving (Show, Eq)
+
+aplicar :: Funcao -> Binario -> Binario -> Binario
+aplicar Soma2 Zero Zero = Zero
+aplicar Soma2 Zero Um   = Um
+aplicar Soma2 Um Zero   = Um
+aplicar Soma2 Um Um     = Zero
+
+aplicar Maior Zero Zero = Zero
+aplicar Maior Zero Um   = Um
+aplicar Maior Um Zero   = Um
+aplicar Maior Um Um     = Um
+
+aplicar Menor Zero Zero = Zero
+aplicar Menor Zero Um   = Zero
+aplicar Menor Um Zero   = Zero
+aplicar Menor Um Um     = Um
+
+aplicar Mult2 Zero Zero = Zero
+aplicar Mult2 Zero Um   = Zero
+aplicar Mult2 Um Zero   = Zero
+aplicar Mult2 Um Um     = Um
+
+-- 3.12)
+binList :: [Binario] -> [Int]
+binList xs = [if b == Zero then 1 else 0 | b <- xs]
+
+-- 3.13)
+data Metros = Metros Int Double | MetragemInvalida deriving (Show, Eq)
+
+areaQuadrado :: Metros -> Metros
+areaQuadrado (Metros 1 lado) = Metros 2 (lado * lado)
+areaQuadrado _ = MetragemInvalida
+
+areaRet :: Metros -> Metros -> Metros
+areaRet (Metros 1 largura) (Metros 1 altura) = Metros 2 (largura * altura)
+areaRet _ _ = MetragemInvalida
+
+areaCubo :: Metros -> Metros
+areaCubo (Metros 1 aresta) = Metros 2 (6 * aresta * aresta)
+areaCubo _ = MetragemInvalida
+
+-- 3.14)
+data Valido = Yes String | No deriving (Show)
+
+isNomeValido :: String -> Valido
+isNomeValido "" = No
+isNomeValido nome = Yes nome
+
 main :: IO ()
 main = do
     putStrLn "Exercícios capítulo 3:\n"
@@ -231,4 +283,29 @@ main = do
     putStrLn $ "revNum 5 \"Haskell\" = " ++ show (revNum 5 "Haskell")
     putStrLn $ "revNum 2 \"ABCD\" = " ++ show (revNum 2 "ABCD")
     putStrLn $ "revNum 7 \"OpenAI\" = " ++ show (revNum 7 "OpenAI")
+
+    -- 3.11)
+    putStrLn "\n3.11) "
+    putStrLn $ "aplicar Soma2 Um Um   = " ++ show (aplicar Soma2 Um Um)
+    putStrLn $ "aplicar Soma2 Um Zero = " ++ show (aplicar Soma2 Um Zero)
+    putStrLn $ "aplicar Maior Zero Um = " ++ show (aplicar Maior Zero Um)
+    putStrLn $ "aplicar Menor Um Zero = " ++ show (aplicar Menor Um Zero)
+    putStrLn $ "aplicar Mult2 Um Um   = " ++ show (aplicar Mult2 Um Um)
+
+    -- 3.12)
+    putStrLn "\n3.12) "
+    let lista = [Um, Zero, Zero, Um, Zero]
+    putStrLn $ "binList " ++ show lista ++ " = " ++ show (binList lista)
+
+    -- 3.13)
+    putStrLn "\n3.13) "
+    putStrLn $ "Área do quadrado: " ++ show (areaQuadrado (Metros 1 2.0))
+    putStrLn $ "Área do retângulo: " ++ show (areaRet (Metros 1 2.0) (Metros 1 3.0))
+    putStrLn $ "Área do cubo: " ++ show (areaCubo (Metros 1 2.0))
+    putStrLn $ "Tentativa inválida: " ++ show (areaQuadrado (Metros 4 5.0))
+
+    -- 3.14)
+    putStrLn "\n3.14) "
+    print (isNomeValido "Haskell")
+    print (isNomeValido "")
 
