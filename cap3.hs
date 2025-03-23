@@ -171,6 +171,54 @@ isNomeValido :: String -> Valido
 isNomeValido "" = No
 isNomeValido nome = Yes nome
 
+-- 3.16)
+data Numero = Numero Double | Erro String deriving (Show)
+
+dividir :: Numero -> Numero -> Numero
+dividir _ (Numero 0) = Erro "Divisão por zero não é permitida!"
+dividir (Numero x) (Numero y) = Numero (x / y)
+dividir (Erro msg) _ = Erro msg
+dividir _ (Erro msg) = Erro msg
+
+-- 3.17)
+data Cripto = Mensagem String | Cifrado String | Error deriving (Show)
+
+encriptar :: Cripto -> Cripto
+encriptar (Mensagem msg) = Cifrado [succ c | c <- msg]
+encriptar _ = Error
+
+decriptar :: Cripto -> Cripto
+decriptar (Cifrado msg) = Mensagem [pred c | c <- msg]
+decriptar _ = Error
+
+-- 3.18)
+encriptarTodos :: [Cripto] -> [Cripto]
+encriptarTodos lista = [encriptar x | x <- lista]
+
+-- 3.19)
+data Cambio = Euro | Real | Dollar deriving (Show, Eq)
+
+data Moeda = Moeda { val :: Double, cur :: Cambio } deriving (Show)
+
+converter :: Moeda -> Cambio -> Moeda
+converter (Moeda valor origem) destino
+    | origem == destino = Moeda valor destino
+    | origem == Euro && destino == Dollar = Moeda (valor * 1.0827) Dollar
+    | origem == Euro && destino == Real = Moeda (valor * 6.18) Real
+    | origem == Dollar && destino == Euro = Moeda (valor * 0.9236) Euro
+    | origem == Dollar && destino == Real = Moeda (valor * 5.71) Real
+    | origem == Real && destino == Euro = Moeda (valor * 0.1618) Euro
+    | origem == Real && destino == Dollar = Moeda (valor * 0.1751) Dollar
+    | otherwise = error "Conversão não suportada"
+
+-- 3.20)
+converterTodosReal :: [Moeda] -> [Moeda]
+converterTodosReal moedas = [converter m Real | m <- moedas]
+
+-- 3.21)
+maxMoeda :: [Moeda] -> Double
+maxMoeda moedas = maximum [val m | m <- moedas]
+
 main :: IO ()
 main = do
     putStrLn "Exercícios capítulo 3:\n"
@@ -308,4 +356,47 @@ main = do
     putStrLn "\n3.14) "
     print (isNomeValido "Haskell")
     print (isNomeValido "")
+
+    -- 3.16)
+    putStrLn "\n3.16) "
+    print (dividir (Numero 6) (Numero 5))
+    print (dividir (Numero 10) (Numero 2))
+    print (dividir (Numero 7) (Numero 0))
+    print (dividir (Erro "Valor inválido") (Numero 3))
+
+    -- 3.17)
+    putStrLn "\n3.17) "
+    let msg1 = Mensagem "FATEC"
+    let cifrada = encriptar msg1
+    let msg2 = decriptar cifrada
+    let erro1 = encriptar cifrada
+    let erro2 = decriptar msg1
+    print cifrada
+    print msg2
+    print erro1
+    print erro2
+
+    -- 3.18)
+    putStrLn "\n3.18) "
+    let mensagens = [Mensagem "FATEC", Cifrado "DBTB", Mensagem "HASKELL", Error]
+    let resultado = encriptarTodos mensagens
+    print resultado
+
+    -- 3.19)
+    putStrLn "\n3.19) "
+    let valorEmEuro = Moeda 100 Euro
+    let valorEmDollar = converter valorEmEuro Dollar
+    let valorEmReal = converter valorEmEuro Real
+    putStrLn $ "100 Euros em Dólares: " ++ show (val valorEmDollar) ++ " " ++ show (cur valorEmDollar)
+    putStrLn $ "100 Euros em Reais: " ++ show (val valorEmReal) ++ " " ++ show (cur valorEmReal)
+
+    -- 3.20)
+    putStrLn "\n3.20) "
+    let valores = [Moeda 50 Euro, Moeda 30 Dollar, Moeda 100 Real]
+    let valoresEmReal = converterTodosReal valores
+    mapM_ print valoresEmReal
+
+    -- 3.21)
+    putStrLn "\n3.21) "
+    print (maxMoeda [Moeda 3 Real, Moeda 7 Dollar, Moeda 1 Euro])
 
